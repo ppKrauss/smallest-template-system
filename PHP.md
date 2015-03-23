@@ -12,16 +12,16 @@ It is really small: the whole template engine have 2 command lines.
 
 Implementation for PHP v5.3+. For older versions see [PHP4](PHP4.md) implementation.
 ```php
-
 function expandVars($T,$X, $prefix='\$', $lazy=0) { // it is a Template Processor!
-return preg_replace_callback(
-"/$prefix([a-z][a-z0-9_]*)/i",
-function($m,$X=NULL) use ($X) {
-return array_key_exists($m[1],$X)? $X[$m[1]]: ($lazy? $m[0] :'');
-},
-$T
-);
-}```
+	return preg_replace_callback(
+		"/$prefix([a-z][a-z0-9_]*)/i",
+		function($m,$X=NULL) use ($X) {
+			return array_key_exists($m[1],$X)? $X[$m[1]]: ($lazy? $m[0] :'');
+		},
+		$T
+	);
+}
+```
 
 PS: to add an "escape syntax" use a prefix like <tt>'(?<!\\\\)\$'</tt> that adds a "not preceded by '/'" assertion in the [PCRE expression](http://www.php.net/manual/en/regexp.reference.assertions.php).
 
@@ -29,22 +29,18 @@ In this algorithm the parsing and expantion are coupled. When parser is isolated
 
 ### Use ###
 ```php
-
 $T1 = "\n<p>Hello $name!
-
-Unknown end tag for &lt;/p&gt;
-
+  Unknown end tag for </p>
 ";
 $T2 = "\n<p>... Byebye $name $surname.
-
-Unknown end tag for &lt;/p&gt;
-
+  Unknown end tag for </p>
 ";
 $X1 = array('name'=>"Maria", 'surname'=>'Joana');
 $X2 = array('name'=>"Jonh", 'surname'=>'Smith');
 print expandVars($T1,$X1); // 1
 print expandVars($T2,$X1); // 2
-print expandVars($T2,$X2); // 3```
+print expandVars($T2,$X2); // 3
+```
 
 |print # | Rendered HTML outputs|
 |:-------|:---------------------|
@@ -64,20 +60,19 @@ The multilingual algorithm is a two-level templating task. Some static content o
 
 ### Direct ###
 ```php
-
 function expandVarsDual($T,$K,$X) {
-$T = expandVars($T,$K,'#');
-return expandVars($T,$X,'@');
-}```
+  $T = expandVars($T,$K,'#');
+  return expandVars($T,$X,'@');
+}
+```
 
 ### Cached ###
 There are two ways to implement the cache:
 
   1. by syntax, like expandVarsDual();
-  1. by "lazy-expand": same placeholder syntax.
+  2. by "lazy-expand": same placeholder syntax.
 
 ```php
-
 // implementation option 1.
 function expandLang($T,$K) { // by syntax default($) + '#'.
 $T2 = array();
@@ -92,12 +87,12 @@ $T2 = array();
 foreach($K as $lang=>$vals)
 $T2[$lang] = expandVars($T,$K[$lang],$prefix,true);
 return $T2;
-}```
+}
+```
 
 ### Direct use ###
 Use example.
 ```php
-
 // CONFIGURE:
 $T = "<p>#K0 @name @surname!<br/>... #K1.
 
@@ -115,35 +110,29 @@ print expandVarsDual($T, $K['en'], array('name'=>'Jonh', 'surname'=>' Smith')  )
 print expandVarsDual($T, $K['es'], array('name'=>'Maria','surname'=>'Joana')   );
 ```
 Results:
+
 ```html
-
 <p>Hello Jonh Smith!<br/>... Goodbye.
-
-Unknown end tag for &lt;/p&gt;
-
-
+Unknown end tag for </p>
 
 <p>¡Hola Maria Joana!<br/>... Adiós.
-
-Unknown end tag for &lt;/p&gt;
-
+Unknown end tag for </p>
 ```
 
 ### Cached use ###
 For the same results,
 ```php
-
 // Same configs: $Kskins and $T
 // Same $X
 $T2 = expandLang($T,$K); // cache it
 print expandVars($T2['en'],$X);
 // more uses with $T2['es']...
 print expandVars($T2['es'],$X);
-// more uses with $T2['es']...```
+// more uses with $T2['es']...
+```
 
 And with the expandLazy,
 ```php
-
 $T = "<p>@K0 @name @surname!<br/>... @K1.
 
 Unknown end tag for &lt;/p&gt;
@@ -152,7 +141,8 @@ Unknown end tag for &lt;/p&gt;
 $T2 = expandLazy($T,$K['en']); // cache it
 
 print expandVars($T2['en'],$X);
-print expandVars($T2['es'],$X);```
+print expandVars($T2['es'],$X);
+```
 
 ## Skin ##
 Another usual kind of two-folding templating process is the
@@ -160,7 +150,6 @@ Another usual kind of two-folding templating process is the
 
 ### Direct use ###
 ```php
-
 // CONFIGURE:
 $Kskins = array( // style-specific structures
 'style1'=>'<h1>|
@@ -178,7 +167,8 @@ $T = '#0 Hello @name! #1'; // general structure and static content
 // USE (with dynamic content):
 $X = array('name'=>'Maria','surname'=>'Joana');
 print expandVarsDual($T,$Kskins['style1'],$X );
-print expandVarsDual($T,$Kskins['style2'],$X );```
+print expandVarsDual($T,$Kskins['style2'],$X );
+```
 
 Results:
 ```html
@@ -211,7 +201,8 @@ $T = '@0 Hello @name! @1'; // uniform syntax, and using named placeholders
 $T2 = expandLazy($T,$Kskins,'@'); // cache it
 
 print expandVars($T2['style1'],$X,'@');
-print expandVars($T2['style2'],$X,'@');```
+print expandVars($T2['style2'],$X,'@');
+```
 
 # zipJoin function #
 
@@ -222,7 +213,6 @@ The [Zipper\_join function](https://code.google.com/p/smallest-template-system/w
 Two string vectors, the "prepared template" `$t` and the input data `$x`, are merged and converted into a simple string.
 
 ```php
-
 function zipJoin(&$t,&$x) {
 return join(
 array_map(  // concatenating array elements
@@ -231,13 +221,13 @@ $t,
 $x
 )
 );
-}```
+}
+```
 
 ## Use ##
 As `$t` is the "prepared template", only "cached mode" can be used.
 
 ```php
-
 $t = array("Hello ",  "!\n"); // parsed from the "Hello $X!" template
 $x0 = array();
 $x1 = array("world");
@@ -265,8 +255,10 @@ $s = '';
 for($i=0; $i<count($t); $i++)
 $s.= $t[$i] . ((isset($Idx[$i]) && isset($x[$Idx[$i]]))? $x[$Idx[$i]]: '');
 return $s;
-}```
+}
+```
 Using:
+
 ```php
 
 $T = array(" Hello ",  ", Goodbye ", "...\n"); // parsed from "Hello $X, Goodbye $Y" template
@@ -286,7 +278,8 @@ print zipJoin_idx($T,$x2,$idx);
 print "\nUsing idx for map an associative array:\n";
 $x3 = array('prefix'=>"Captain", 'given'=>"Peter", 'surname'=>"Lachlan");  // label=>value
 $rel = array(0=>'prefix', 1=>'surname'); // idx=>label
-print zipJoin_idx($T,$x3,$rel);```
+print zipJoin_idx($T,$x3,$rel);
+```
 
 Results:
 ```html
@@ -299,7 +292,8 @@ Hello Peter, Goodbye Mary...
 Hello Mary, Goodbye Jonh...
 
 Using idx for map an associative array:
-Hello Captain, Goodbye Lachlan...```
+Hello Captain, Goodbye Lachlan...
+```
 
 ## prepareTemplate() ##
 Transform the template into an array, and generates the array of indexes, when required.
@@ -308,4 +302,5 @@ Transform the template into an array, and generates the array of indexes, when r
 
 function prepareTemplate($T, $prefix='\$') { // Template Pre-Processor
 ...
-}```
+}
+```
