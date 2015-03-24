@@ -1,3 +1,7 @@
+**Project wiki under construction**. Automatically exported.
+
+----------
+
 smallest-template-system
 
 
