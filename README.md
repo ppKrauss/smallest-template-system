@@ -10,13 +10,13 @@ This project is a didactic investigation about the simplest ways to express *tem
 The simplest and well-known template is that: "_Hello *X*!_" where *X* is a placeholder, that you can substitute by "world" or by "Mary" to produce "_Hello world!_" or "_Hello Mary!_".
 
 See *how the smallest is inspired by the simplest*:
-  * [SimplestSyntax simplest template syntax] and 
-  * [SimplestAlgorithm Simplest template engine algorithms]
+  * [simplest template syntax](SimplestSyntax.md) and 
+  * [Simplest template engine algorithms](SimplestAlgorithm.md)
 
 For see the *smallest algorithms*, choose your preferred programming language:
-  * [PHP PHP] (and download available)
-  * [Javascript Javascript]
-  * [PLpgSql PL/pgSQL] (PostgreSQL stored procedures language)
+  * [PHP](PHP.md) (and download available)
+  * [Javascript](Javascript.md)
+  * [PL/pgSQL](PLpgSql.md) (PostgreSQL stored procedures language)
 
 See [habemus-papam project](https://github.com/ppKrauss/habemus-papam) for a good test-kit and bentchmark reference.
 
