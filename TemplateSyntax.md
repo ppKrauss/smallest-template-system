@@ -25,8 +25,9 @@ Here, in this project, this page specify the _template syntax conventions_; and 
 
 # Main conventions #
 The "default (suggested) syntax" is
+
 | **Syntax** | **Example** |
-|:-----------|:------------|
+|-----------|------------|
 | {$ argument\_index}| {$3} |
 | {$ argument\_name}| {$surname} |
 | {$ argument | format}| {$n|2d} |
@@ -56,20 +57,21 @@ The usual conventions are,
 ## Template examples ##
 
 Template syntax on default conventions:
+
 | **Template**    | **Data** |  **Output** |
-|:----------------|:---------|:------------|
-| _Hello {$0}!_ | world | Hello world!|
-| _Hello {$0}!_ | Maria | Hello Maria!|
-| _Hello {$name}!_ | Jonh | Hello Jonh!|
-| _The number is {$n|2.2f}._ | 3.1416 | The number is 3.14. |
+|----------------|---------|------------|
+| `Hello {$0}!` | world | Hello world!|
+| `Hello {$0}!` | Maria | Hello Maria!|
+| `Hello {$name}!` | Jonh | Hello Jonh!|
+| `The number is {$n|2.2f}.` | 3.1416 | The number is 3.14. |
 
 Changing some default conventions: prefix=%% and not to use {}.
 
 | **Template**    | **Data** |  **Output** |
-|:----------------|:---------|:------------|
-| _Hello %%!_ | world | Hello world!|
-| _Hello %%name!_ | Jonh | Hello Jonh!|
-| _The number is %%n|2.2f ._ | 3.1416 | The number is 3.14 . |
+|----------------|---------|------------|
+| `Hello %%!` | world | Hello world!|
+| `Hello %%name!` | Jonh | Hello Jonh!|
+| `The number is %%n|2.2f.` | 3.1416 | The number is 3.14. |
 
 The last one show a typical syntax conflict: if there is no blank space, the string  "2.2f." can be interpreted as format. Enclosing by "{}" avoid conflicts.
 
@@ -82,7 +84,7 @@ We adopt here a flexible formatting syntax similar to the [Python string-formatt
 There are many possible conventions for your template syntax,
 
 | **Syntax** | **Example** |
-|:-----------|:------------|
+|-----------|------------|
 | prefix| %% |
 | {prefix}| {%%} |
 | prefix argument\_index| %%3 |
@@ -94,7 +96,7 @@ There are many possible conventions for your template syntax,
 Alternatives to the "{$ argument | format}" (ex. "<tt>{$x|s}</tt>"),
 
 | **Syntax** | **Example** |
-|:-----------|:------------|
+|-----------|------------|
 | prefix separator format| %%|s |
 | {prefix separator format}| {%%|s} |
 | prefix argument separator format| %%x|s |
@@ -105,14 +107,16 @@ Some extendibility for formatting options is possible, but we not recommend add 
 If some extendibility is necessary, the syntax to extension is,
 
 | **Syntax** | **Example** |
-|:-----------|:------------|
+|-----------|------------|
 | {$ argument | format | piped\_function}| {$n|2d|render} |
 | {$ argument ! piped\_function | format}| {$n!transform|2d} |
 
 A typical use, where it is necessary, is the conditional pluralization:
 
+
+|----------------------------|
 | {$substative!pluralize($n)} |
-|:----------------------------|
+
 
 Possible outputs of a <tt>"Eating {$n} {$food!pluralize($n)}"</tt> template: "Eating 1 octopus", "Eating 3 octopuses".
 
